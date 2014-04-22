@@ -49,6 +49,32 @@ class TesterServiceSpec extends Specification {
         _resetCurrentTime()
     }
 
+    @Unroll
+    def "executeのテストdaoをmock化したい"() {
+        given:
+        def factory = Mock(DaoFactory)
+        factory.execute("foo") >> "BAR"
+        Dao.metaClass.setAttribute(testerService, "factory", factory)
+        when:
+        def expect = testerService.convert("foo")
+        then:
+        expect == "test_BAR"
+    }
+
+    @Unroll
+    def "executeのテスト#srcを#dstに変更した結果は#expect"() {
+        given:
+        def factory = Mock(DaoFactory)
+        factory.execute(src) >> dst
+        Dao.metaClass.setAttribute(testerService, "factory", factory)
+        expect:
+        expect == testerService.convert(src)
+        where:
+        src   | dst    || expect
+        "foo" | "BAR"  || "test_BAR"
+        "foo" | "bar"  || "test_bar"
+        "foo" | "Abar" || "test_Abar"
+    }
 
     def _setCurrentTime(DateTime dateTime) {
         DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis())

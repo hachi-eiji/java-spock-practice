@@ -36,4 +36,8 @@ public class TesterService {
         currentDateFactory.add(date, addDays);
         return "foo -> " + date.getYear();
     }
+
+    public String convert(String str){
+        return "test_"+Dao.getFactory().execute(str);
+    }
 }

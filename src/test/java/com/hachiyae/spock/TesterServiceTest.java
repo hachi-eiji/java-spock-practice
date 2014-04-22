@@ -1,5 +1,6 @@
 package com.hachiyae.spock;
 
+import mockit.Cascading;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mock;
@@ -58,6 +59,7 @@ public class TesterServiceTest {
     // 無駄にモックオブジェクトインスタンスを生成しない
     @Mocked
     final SampleUtil sampleUtil = null;
+
     @Test
     public void testSayCurrentTime() throws Exception {
         // static method
@@ -98,5 +100,17 @@ public class TesterServiceTest {
 
         String s = tester.executeVoidMethod(calendar.getTime(), 1);
         assertThat(s, is("foo -> " + 114));
+    }
+
+    @Test
+    public void test_convert(@Cascading Dao dao) throws Exception {
+        new Expectations(dao) {
+            {
+                Dao.getFactory().execute("foo");
+                result = "BAR";
+            }
+        };
+
+        assertThat(tester.convert("foo"), is("test_BAR"));
     }
 }
