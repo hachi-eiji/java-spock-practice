@@ -1,20 +1,27 @@
 package com.hachiyae.spock;
 
+import mockit.MockUp;
 import org.junit.Test;
 
-import static org.hamcrest.core.Is.is;
+import java.util.Calendar;
+import java.util.Date;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class SampleUtilTest {
 
     @Test
-    public void testGetDate() throws Exception {
-
-    }
-
-    @Test
-    public void testIncrease() throws Exception {
-        int increase = SampleUtil.increase(1, 2);
-        assertThat("1+2="+increase, increase, is(3));
+    public void testGetCurrentDate() throws Exception {
+        new MockUp<System>(){
+            public long currentTimeMillis(){
+                Calendar cal = Calendar.getInstance();
+                cal.clear();
+                cal.set(2010, 0, 1);
+                return cal.getTimeInMillis();
+            }
+        };
+        Date currentDate = SampleUtil.getCurrentDate();
+        assertThat(currentDate.getYear(), is(114));
     }
 }
