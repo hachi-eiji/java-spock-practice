@@ -26,8 +26,7 @@ class TesterServiceSpec extends Specification {
 
     @Unroll
     def "sayCurrentDate"() {
-        given:
-        // mockの宣言
+        given: "Mockの宣言がかけます.日付を2010/01/02に指定"
         def currentDate = Mock(CurrentDateFactory)
         currentDate.getCurrentDate() >> new DateTime(2010, 1, 2, 0, 0).toDate()
         TesterService.metaClass.setAttribute(testerService, "currentDateFactory", currentDate)
