@@ -2,18 +2,30 @@ package com.hachiyae.spock
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 import spock.lang.Unroll
 
+/**
+ * テンプレート的に作ってます
+ * クラス名のデフォルトは一般規則に則りxxxSpecで.
+ */
+// springのautowiredをつかうときはいつもどおりContextConfigurationを使う
 @ContextConfiguration(locations = "classpath:spring-test.xml")
 class TesterServiceSpec extends Specification {
+    // springのautowiredもつかえますよ
+    @Autowired
     TesterService testerService;
 
+    // setupをここに書くこともできます
     def setup() {
-        testerService = new TesterService();
+//        testerService = new TesterService();
     }
 
+    // もちろんメソッド名はわかりやすくしてください
+    // ダブルコーテーションで囲むことでメソッドの名の最初が数字から開始できます
+    // throws 句は必要ないです
     @Unroll
     def "SayHello#nameのときは#expect"() {
         expect:
@@ -24,7 +36,6 @@ class TesterServiceSpec extends Specification {
         ""    || "Hello "
     }
 
-    @Unroll
     def "sayCurrentDate"() {
         given: "Mockの宣言がかけます.日付を2010/01/02に指定"
         def currentDate = Mock(CurrentDateFactory)
@@ -36,19 +47,23 @@ class TesterServiceSpec extends Specification {
         expect == "current date is 2010/01/02"
     }
 
-    @Unroll
     def "testSayCurrentTime"() {
+        // givenはテスト実行前に実施(JUnitの@Before)
         given:
+        // 日付を変更する
         _setCurrentTime(new DateTime(2010, 1, 2, 1, 2, 3))
+        // whenでテスト内容を記載
         when:
         def expect = testerService.sayCurrentTime()
+        // thenでチェックします
         then:
         expect == "current time is 01:02:03"
+        // テスト完了後に実施.(JUnitの@After)
         cleanup:
+        // ここで戻さないと他のテストに影響あるので注意
         _resetCurrentTime()
     }
 
-    @Unroll
     def "executeのテストdaoをmock化したい"() {
         given:
         def factory = Mock(DaoFactory)
@@ -60,6 +75,7 @@ class TesterServiceSpec extends Specification {
         expect == "test_BAR"
     }
 
+    // unrollをつけるとメソッド名にパラメータを置換できる
     @Unroll
     def "executeのテスト#srcを#dstに変更した結果は#expect"() {
         given:
