@@ -7,12 +7,12 @@ import spock.lang.Unroll
 class SampleUtilSpec extends Specification {
     @Unroll
     def "GetDate_1個の場合"() {
-        given:
+        setup: "日付のモックを設定する"
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
         calendar.set(2010, 0, 1);
         DateTimeUtils.setCurrentMillisFixed(calendar.getTimeInMillis())
-        when:
+        when: "現在の日付を返却する"
         Date currentDate = SampleUtil.getCurrentDate();
         then:
         currentDate.month == 0
@@ -22,6 +22,7 @@ class SampleUtilSpec extends Specification {
 
     @Unroll
     def "GetDate_オブジェクト型のチェック#yearと#monthで#dateは#currentDate"() {
+        // givenはsetupのエイリアス
         given:
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
