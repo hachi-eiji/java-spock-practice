@@ -37,7 +37,7 @@ class TesterServiceSpec extends Specification {
     }
 
     def "sayCurrentDate"() {
-        given: "Mockの宣言がかけます.日付を2010/01/02に指定"
+        setup: "Mockの宣言がかけます.日付を2010/01/02に指定"
         def currentDate = Mock(CurrentDateFactory)
         currentDate.getCurrentDate() >> new DateTime(2010, 1, 2, 0, 0).toDate()
         TesterService.metaClass.setAttribute(testerService, "currentDateFactory", currentDate)
@@ -49,7 +49,7 @@ class TesterServiceSpec extends Specification {
 
     def "testSayCurrentTime"() {
         // givenはテスト実行前に実施(JUnitの@Before)
-        given:
+        setup:
         // 日付を変更する
         _setCurrentTime(new DateTime(2010, 1, 2, 1, 2, 3))
         // whenでテスト内容を記載
@@ -65,7 +65,7 @@ class TesterServiceSpec extends Specification {
     }
 
     def "executeのテストdaoをmock化したい"() {
-        given:
+        setup:
         def factory = Mock(DaoFactory)
         factory.execute("foo") >> "BAR"
         Dao.metaClass.setAttribute(testerService, "factory", factory)
@@ -78,7 +78,7 @@ class TesterServiceSpec extends Specification {
     // unrollをつけるとメソッド名にパラメータを置換できる
     @Unroll
     def "executeのテスト#srcを#dstに変更した結果は#expect"() {
-        given:
+        setup:
         def factory = Mock(DaoFactory)
         factory.execute(src) >> dst
         Dao.metaClass.setAttribute(testerService, "factory", factory)

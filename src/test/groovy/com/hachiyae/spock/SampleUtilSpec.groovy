@@ -5,7 +5,6 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 class SampleUtilSpec extends Specification {
-    @Unroll
     def "GetDate_1個の場合"() {
         setup: "日付のモックを設定する"
         Calendar calendar = Calendar.getInstance();
