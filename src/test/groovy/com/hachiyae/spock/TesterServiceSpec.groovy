@@ -65,8 +65,8 @@ class TesterServiceSpec extends Specification {
     }
 
     def "executeのテストdaoをmock化したい"() {
-        setup:
-        def factory = Mock(DaoFactory)
+        setup: "DaoFactory factory = Mock();の記法だとIDEサポートが得られやすい"
+        DaoFactory factory = Mock();
         factory.execute("foo") >> "BAR"
         Dao.metaClass.setAttribute(testerService, "factory", factory)
         when:
@@ -79,8 +79,9 @@ class TesterServiceSpec extends Specification {
     @Unroll
     def "executeのテスト#srcを#dstに変更した結果は#expect"() {
         setup:
-        def factory = Mock(DaoFactory)
-        factory.execute(src) >> dst
+        DaoFactory factory = Mock {
+            execute(src) >> dst
+        }
         Dao.metaClass.setAttribute(testerService, "factory", factory)
         expect:
         expect == testerService.convert(src)
